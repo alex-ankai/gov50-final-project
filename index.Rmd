@@ -1,6 +1,6 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Alex Ankai"
 description: "My final project"
 output:
   distill::distill_article:
@@ -11,4 +11,4 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to horror films from the last decade to asses box office and budget. My goal would be to push for more creativity in horror films, as opposed to films dependent on algorithms thought to bring in the most money.
