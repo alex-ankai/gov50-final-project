@@ -16,6 +16,5 @@ Does budget affect horror movie audience engagement? In this study, I plan to an
 
 ```{r}
 library(distill)
-create_article("article.Rmd")
 ```
 
