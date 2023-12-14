@@ -1,13 +1,10 @@
 ---
-title: "Untitled"
-description: |
+title: "Horror Movie Quality vs. Budget"
+description: If you're a film distribution company looking to own horror content that will make the most money, I will see if IMDb audience engagement and approval translates to money making ability, and if IMDb stats like votes and ratings are good inidcators of how much money a movie makes.
   A new article created using the Distill format.
 author:
-  - name: Nora Jones 
-    url: https://example.com/norajones
-    affiliation: Spacely Sprockets
-    affiliation_url: https://example.com/spacelysprokets
-date: "`r Sys.Date()`"
+  - name: Alex Ankai 
+date: 12/13/23
 output: distill::distill_article
 ---
 
@@ -21,6 +18,77 @@ Distill is a publication format for scientific and technical writing, native to 
 Learn more about using Distill for R Markdown at <https://rstudio.github.io/distill>.
 
 
+```{r}
+library(tidyverse)
+library(stringr)
+
+
+imdb <- read_csv("imdbdata.csv")
+imdb
+
+imdb <- imdb |>
+  rename(rating = `Rating`) |>
+  rename(title = `Movie Title`) |>
+  rename(year = `Movie Year`) |>
+  rename(runtime = Runtime) |>
+  rename(genre = Genre) |>
+  rename(director = Director) |>
+  rename(votes = Votes) |>
+  rename(gross = Gross) |>
+  filter(year >= 2000)
+
+imdb
+  
+
+imdb <- imdb |>
+  mutate(gross = as.character(gross)) |>
+  mutate(gross = as.numeric(str_extract(gross, "\\d+\\.*\\d*")))
+
+```
+
+
+## Audience Engagement: Votes
+
+```{r}
+
+imdb |>
+  ggplot(aes(x = votes, y = gross, na.rm = TRUE)) +
+  geom_point() + geom_smooth() +
+  scale_x_log10() +
+  labs(x = "Votes",
+       y = "Gross Revenue (Millions of Dollars)",
+       title = "IMDb Votes and Gross Revenue")
+  
+
+```
+
+The scatterplot is consistent with my hypothesis that more IMDb Votes correlates to higher gross revenue. 
 
 
 
+## Audience Approval: Rating
+
+```{r}
+
+imdb |>
+  ggplot(aes(x = rating, y = gross, na.rm = TRUE)) +
+  geom_col() + 
+  labs(x = "Rating",
+       y = "Gross Revenue (Millions of Dollars)",
+       title = "IMDb Rating and Gross Revenue")
+
+```
+
+With some exeptions, the data seems to be skewed left, evidencing that contrary to my hypothesis, a higher IMDb Rating, and thus, higher audience approval, does point to more gross revenue, where I had hypothesized that there was no correlation. And so a higher number of Votes does seem to be a good indicator of increased financial viability of potential horror films. Interestingly, there additionally are films with high ratings and very low gross revenue.
+
+
+## Regression
+
+```{r}
+
+reg_imdb <- lm(gross ~ votes + rating, data = imdb)
+summary(reg_imdb)
+
+```
+
+The coefficient is not statisctically significant at the 0.05 level, and I don't believe the coefficient represents a causal effect.
